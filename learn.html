@@ -1,0 +1,1763 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ML Algorithm Atlas</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --surface: #111118;
+    --surface2: #1a1a24;
+    --border: #2a2a3a;
+    --text: #e8e8f0;
+    --muted: #7878a0;
+    --accent: #7c6dfa;
+    --accent2: #fa6d9a;
+    --accent3: #6dfacc;
+    --accent4: #facc6d;
+    --accent5: #6db8fa;
+
+    --cat-reg: #7c6dfa;
+    --cat-cls: #fa6d9a;
+    --cat-ens: #facc6d;
+    --cat-dl: #6dfacc;
+    --cat-gen: #fa9b6d;
+    --cat-clu: #6db8fa;
+    --cat-dim: #b86dfa;
+    --cat-aso: #fa6db8;
+    --cat-rl:  #6dfacc;
+    --cat-ano: #fadc6d;
+    --cat-bay: #6dfacc;
+    --cat-sur: #fa6d7c;
+    --cat-evo: #a8fa6d;
+    --cat-par: #6db8fa;
+    --cat-ts:  #faa56d;
+    --cat-ker: #c46dfa;
+    --cat-met: #6dfad8;
+    --cat-gnn: #6d9cfa;
+    --cat-cau: #fa6dab;
+    --cat-rnk: #e0fa6d;
+    --cat-rec: #6df0fa;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  /* HEADER */
+  header {
+    position: relative;
+    padding: 80px 40px 60px;
+    overflow: hidden;
+    border-bottom: 1px solid var(--border);
+  }
+
+  header::before {
+    content: '';
+    position: absolute;
+    top: -200px; left: -200px;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(124,109,250,0.15) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  header::after {
+    content: '';
+    position: absolute;
+    bottom: -100px; right: -100px;
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(250,109,154,0.1) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .header-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .header-label::before {
+    content: '';
+    display: inline-block;
+    width: 24px; height: 1px;
+    background: var(--accent);
+  }
+
+  h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(42px, 6vw, 80px);
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: -2px;
+    margin-bottom: 20px;
+  }
+
+  h1 span {
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .header-sub {
+    color: var(--muted);
+    font-size: 16px;
+    max-width: 500px;
+    font-weight: 300;
+  }
+
+  .stats-bar {
+    display: flex;
+    gap: 40px;
+    margin-top: 40px;
+    padding-top: 40px;
+    border-top: 1px solid var(--border);
+    flex-wrap: wrap;
+  }
+
+  .stat {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .stat-num {
+    font-family: 'Syne', sans-serif;
+    font-size: 32px;
+    font-weight: 800;
+    background: linear-gradient(135deg, var(--accent3), var(--accent5));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .stat-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+  }
+
+  /* SEARCH & FILTER */
+  .controls {
+    padding: 30px 40px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .search-wrap {
+    position: relative;
+    flex: 1;
+    min-width: 200px;
+  }
+
+  .search-wrap::before {
+    content: '⌕';
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--muted);
+    font-size: 18px;
+  }
+
+  #searchInput {
+    width: 100%;
+    padding: 12px 16px 12px 42px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  #searchInput:focus { border-color: var(--accent); }
+  #searchInput::placeholder { color: var(--muted); }
+
+  .filter-btns {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .filter-btn {
+    padding: 8px 14px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--muted);
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-transform: uppercase;
+  }
+
+  .filter-btn:hover, .filter-btn.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: white;
+  }
+
+  /* MAIN CONTENT */
+  main { padding: 40px; max-width: 1600px; margin: 0 auto; }
+
+  /* CATEGORY SECTION */
+  .category {
+    margin-bottom: 64px;
+    animation: fadeIn 0.5s ease forwards;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .cat-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .cat-icon {
+    width: 48px; height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+  }
+
+  .cat-title-wrap { flex: 1; }
+
+  .cat-name {
+    font-family: 'Syne', sans-serif;
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+  }
+
+  .cat-desc {
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+
+  .cat-count {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    padding: 6px 12px;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+  }
+
+  /* ALGORITHM GRID */
+  .algo-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 16px;
+  }
+
+  /* ALGORITHM CARD */
+  .algo-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all 0.25s ease;
+    cursor: pointer;
+    position: relative;
+  }
+
+  .algo-card:hover {
+    border-color: var(--cat-color, var(--accent));
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+  }
+
+  .algo-card.hidden { display: none; }
+
+  .card-accent {
+    height: 3px;
+    background: var(--cat-color, var(--accent));
+    width: 100%;
+  }
+
+  .card-body { padding: 20px; }
+
+  .algo-name {
+    font-family: 'Syne', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: var(--text);
+  }
+
+  .algo-def {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.6;
+    margin-bottom: 16px;
+  }
+
+  .card-details {
+    display: none;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+    animation: slideDown 0.3s ease;
+  }
+
+  @keyframes slideDown {
+    from { opacity: 0; transform: translateY(-8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .algo-card.expanded .card-details { display: flex; }
+
+  .detail-row { display: flex; flex-direction: column; gap: 4px; }
+
+  .detail-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--cat-color, var(--accent));
+    opacity: 0.8;
+  }
+
+  .detail-val {
+    font-size: 13px;
+    color: #c8c8d8;
+    line-height: 1.5;
+  }
+
+  .tag {
+    display: inline-block;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-family: 'Space Mono', monospace;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid var(--border);
+    color: var(--muted);
+    margin: 2px;
+  }
+
+  .expand-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 12px;
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: var(--cat-color, var(--accent));
+    opacity: 0.7;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    transition: opacity 0.2s;
+  }
+
+  .expand-btn:hover { opacity: 1; }
+
+  .expand-icon {
+    width: 16px; height: 16px;
+    border: 1px solid currentColor;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    transition: transform 0.3s;
+  }
+
+  .algo-card.expanded .expand-icon { transform: rotate(45deg); }
+
+  /* NO RESULTS */
+  .no-results {
+    display: none;
+    text-align: center;
+    padding: 80px 40px;
+    color: var(--muted);
+    font-family: 'Space Mono', monospace;
+  }
+
+  /* SCROLLBAR */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+  /* FOOTER */
+  footer {
+    margin-top: 80px;
+    padding: 40px;
+    border-top: 1px solid var(--border);
+    text-align: center;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 2px;
+  }
+
+  .cat-hidden { display: none; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-label">Machine Learning Reference</div>
+  <h1>ML Algorithm<br><span>Atlas</span></h1>
+  <p class="header-sub">Panduan lengkap seluruh algoritma machine learning — definisi, kapan pakai, data apa, cara kerja, dan use case nyata.</p>
+  <div class="stats-bar">
+    <div class="stat"><span class="stat-num">200+</span><span class="stat-label">Algoritma</span></div>
+    <div class="stat"><span class="stat-num">20</span><span class="stat-label">Kategori</span></div>
+    <div class="stat"><span class="stat-num">∞</span><span class="stat-label">Use Cases</span></div>
+  </div>
+</header>
+
+<div class="controls">
+  <div class="search-wrap">
+    <input type="text" id="searchInput" placeholder="Cari algoritma... (contoh: XGBoost, CNN, K-Means)">
+  </div>
+  <div class="filter-btns">
+    <button class="filter-btn active" data-filter="all">Semua</button>
+    <button class="filter-btn" data-filter="supervised">Supervised</button>
+    <button class="filter-btn" data-filter="unsupervised">Unsupervised</button>
+    <button class="filter-btn" data-filter="deep-learning">Deep Learning</button>
+    <button class="filter-btn" data-filter="reinforcement">Reinforcement</button>
+  </div>
+</div>
+
+<main id="mainContent">
+  <div id="noResults" class="no-results">// Tidak ada algoritma yang cocok dengan pencarian</div>
+</main>
+
+<footer>ML ALGORITHM ATLAS &mdash; COMPREHENSIVE REFERENCE &mdash; 2025</footer>
+
+<script>
+const categories = [
+  {
+    id: 'regression',
+    name: 'Regresi',
+    icon: '📈',
+    color: '#7c6dfa',
+    group: 'supervised',
+    desc: 'Prediksi nilai numerik kontinu dari fitur input',
+    algos: [
+      {
+        name: 'Linear Regression',
+        def: 'Model paling dasar yang mencari garis lurus terbaik antara fitur dan target.',
+        data: 'Data numerik kontinu, hubungan linear antar variabel, tanpa outlier ekstrem.',
+        cara: 'Meminimalkan sum of squared errors antara prediksi dan nilai aktual menggunakan Ordinary Least Squares (OLS) atau Gradient Descent.',
+        saran: 'Gunakan sebagai baseline pertama. Jika residual membentuk pola, pertimbangkan model non-linear.',
+        usecase: 'Prediksi harga rumah berdasarkan luas, lokasi, dan jumlah kamar.'
+      },
+      {
+        name: 'Ridge Regression',
+        def: 'Linear regression dengan regularisasi L2 untuk mencegah overfitting saat banyak fitur berkorelasi.',
+        data: 'Data dengan multicollinearity tinggi, banyak fitur numerik yang saling berkorelasi.',
+        cara: 'Menambahkan penalty λ×Σβ² ke fungsi loss, memaksa koefisien kecil tapi tidak nol.',
+        saran: 'Pilih ini jika semua fitur dianggap relevan tapi saling berkorelasi tinggi.',
+        usecase: 'Prediksi nilai saham dari puluhan indikator teknikal yang saling berkorelasi.'
+      },
+      {
+        name: 'Lasso Regression',
+        def: 'Linear regression dengan regularisasi L1 yang secara otomatis melakukan feature selection.',
+        data: 'Data berdimensi tinggi dengan banyak fitur tidak relevan yang perlu dieliminasi.',
+        cara: 'Menambahkan penalty λ×Σ|β| yang bisa mendorong koefisien tepat ke nol (sparse solution).',
+        saran: 'Pilih saat ingin model yang simpel dan interpretable dengan sedikit fitur penting.',
+        usecase: 'Seleksi gen penting dari ribuan gen untuk prediksi risiko penyakit genetik.'
+      },
+      {
+        name: 'ElasticNet',
+        def: 'Kombinasi Ridge dan Lasso yang menyeimbangkan feature selection dan handling multicollinearity.',
+        data: 'Data dengan banyak fitur berkorelasi sekaligus banyak fitur tidak relevan.',
+        cara: 'Menggunakan kombinasi penalty L1 dan L2: λ₁×Σ|β| + λ₂×Σβ². Dua hyperparameter dikontrol terpisah.',
+        saran: 'Default pilihan saat tidak yakin mau Ridge atau Lasso.',
+        usecase: 'Prediksi performa atlet dari ratusan metrik fisik dan psikologis.'
+      },
+      {
+        name: 'Polynomial Regression',
+        def: 'Ekstensi linear regression untuk menangkap hubungan non-linear dengan menambah fitur pangkat.',
+        data: 'Data dengan kurva non-linear tapi sederhana, dataset tidak terlalu besar.',
+        cara: 'Membuat fitur baru x², x³, dst., kemudian menerapkan linear regression pada fitur yang diperluas.',
+        saran: 'Hati-hati degree tinggi → overfitting. Gunakan cross-validation untuk pilih degree optimal.',
+        usecase: 'Prediksi pertumbuhan populasi atau kurva epidemi penyakit.'
+      },
+      {
+        name: 'Support Vector Regression (SVR)',
+        def: 'Adaptasi SVM untuk regresi yang toleran terhadap error dalam margin tertentu (epsilon-insensitive).',
+        data: 'Dataset kecil-menengah dengan noise tinggi, data non-linear dengan kernel trick.',
+        cara: 'Mencari hyperplane yang memiliki semua titik dalam tube epsilon. Hanya support vectors yang mempengaruhi model.',
+        saran: 'Cocok untuk dataset < 100K sampel. Sensitif terhadap skala fitur, selalu scale dulu.',
+        usecase: 'Prediksi harga energi listrik harian dari cuaca dan konsumsi historis.'
+      },
+      {
+        name: 'Quantile Regression',
+        def: 'Memprediksi quantile tertentu (median, P90, dll) bukan mean, robust terhadap outlier.',
+        data: 'Data dengan distribusi asimetris, outlier signifikan, atau saat interval prediksi penting.',
+        cara: 'Meminimalkan asymmetric loss (pinball loss) yang berbeda bobotnya untuk error positif dan negatif.',
+        saran: 'Pilih ini saat perlu prediction interval atau data distribusinya skewed.',
+        usecase: 'Estimasi biaya proyek konstruksi pada percentile 90th untuk risk management.'
+      },
+      {
+        name: 'Robust Regression (Huber, RANSAC)',
+        def: 'Regresi yang tahan terhadap outlier ekstrem dengan mengurangi pengaruh titik anomali.',
+        data: 'Data dengan outlier signifikan yang sulit dihapus, data dari sensor yang sering error.',
+        cara: 'Huber loss: kuadratik untuk error kecil, linear untuk error besar. RANSAC: iteratif sampel inlier.',
+        saran: 'Gunakan saat preprocessing tidak bisa menghapus outlier karena mereka valid secara domain.',
+        usecase: 'Prediksi koordinat GPS dari sensor dengan occasional spike errors.'
+      },
+      {
+        name: 'MARS (Multivariate Adaptive Regression Splines)',
+        def: 'Model non-parametrik yang secara otomatis menemukan breakpoint dan interaksi non-linear.',
+        data: 'Data tabular dengan hubungan non-linear kompleks, interaksi antar fitur, mixed types.',
+        cara: 'Membangun basis functions dengan hinge functions: max(0, x-c) dan max(0, c-x). Dipilih via forward/backward pass.',
+        saran: 'Alternatif interpretable untuk Random Forest pada dataset kecil-menengah.',
+        usecase: 'Pemodelan respon biologis terhadap dosis obat dengan breakpoint yang tidak diketahui.'
+      },
+      {
+        name: 'Gaussian Process Regression',
+        def: 'Model Bayesian non-parametrik yang memberikan prediksi beserta uncertainty quantification.',
+        data: 'Dataset kecil (< 10K), masalah optimasi dengan data mahal, butuh confidence interval.',
+        cara: 'Mendefinisikan prior distribusi Gaussian atas fungsi. Update posterior dari data menggunakan Bayes theorem.',
+        saran: 'Ideal untuk Bayesian optimization. Tidak scalable untuk data besar (O(n³)).',
+        usecase: 'Optimasi hyperparameter ML secara efisien atau eksperimen material baru di lab.'
+      },
+      {
+        name: 'Isotonic Regression',
+        def: 'Regresi yang memaksa output monoton (selalu naik atau turun), cocok untuk kalibrasi probabilitas.',
+        data: 'Data dengan hubungan monoton yang diketahui secara domain, kalibrasi output model.',
+        cara: 'Pool Adjacent Violators Algorithm (PAVA): merge segmen yang melanggar monotonicity.',
+        saran: 'Sering dipakai sebagai post-processing kalibrasi setelah model lain untuk memperbaiki probabilitas.',
+        usecase: 'Kalibrasi probabilitas output classifier agar lebih akurat secara statistik.'
+      },
+    ]
+  },
+  {
+    id: 'classification',
+    name: 'Klasifikasi',
+    icon: '🎯',
+    color: '#fa6d9a',
+    group: 'supervised',
+    desc: 'Prediksi kategori atau kelas dari data input',
+    algos: [
+      {
+        name: 'Logistic Regression',
+        def: 'Klasifikasi biner/multinomial berbasis probabilitas sigmoid, interpretasi koefisien sangat mudah.',
+        data: 'Data numerik dengan hubungan linear ke log-odds, tidak ada multicollinearity ekstrem.',
+        cara: 'Menerapkan fungsi sigmoid ke kombinasi linear fitur. Dioptimalkan dengan Maximum Likelihood Estimation.',
+        saran: 'Selalu coba sebagai baseline klasifikasi. Jika performa kurang, baru coba yang lebih kompleks.',
+        usecase: 'Prediksi gagal bayar kredit nasabah berdasarkan riwayat keuangan.'
+      },
+      {
+        name: 'K-Nearest Neighbors (KNN)',
+        def: 'Klasifikasi berdasarkan majority vote dari K tetangga terdekat, tanpa fase training eksplisit.',
+        data: 'Data berdimensi rendah-menengah, fitur bermakna secara jarak Euclidean, dataset tidak terlalu besar.',
+        cara: 'Simpan semua training data. Untuk prediksi, hitung jarak ke semua titik, ambil K terdekat, vote mayoritas.',
+        saran: 'Scale fitur dulu! Pilih K via cross-validation. Tidak cocok untuk data sparse atau high-dimensional.',
+        usecase: 'Sistem rekomendasi berdasarkan kesamaan preferensi pengguna (collaborative filtering sederhana).'
+      },
+      {
+        name: 'Support Vector Machine (SVM)',
+        def: 'Mencari hyperplane optimal yang memaksimalkan margin antara kelas, sangat efektif untuk dimensi tinggi.',
+        data: 'Data berdimensi tinggi, dataset kecil-menengah (< 100K), data teks dan genomik.',
+        cara: 'Menemukan support vectors dan hyperplane dengan margin maksimum. Kernel trick untuk non-linear.',
+        saran: 'Pilih kernel: linear untuk teks, RBF untuk umum. Sensitif terhadap skala, selalu normalize.',
+        usecase: 'Klasifikasi spam email dari fitur TF-IDF teks, atau deteksi intrusi jaringan.'
+      },
+      {
+        name: 'Naive Bayes',
+        def: 'Classifier probabilistik berbasis Bayes theorem dengan asumsi semua fitur independen.',
+        data: 'Data teks (Multinomial/Bernoulli), data numerik kontinu (Gaussian), fitur kondisional independen.',
+        cara: 'P(class|features) ∝ P(class) × Π P(feature_i|class). Pilih class dengan probabilitas tertinggi.',
+        saran: 'Gaussian NB untuk numerik, Multinomial NB untuk count/frekuensi teks, Bernoulli untuk biner.',
+        usecase: 'Filter spam SMS/email, analisis sentimen tweet, klasifikasi dokumen berita.'
+      },
+      {
+        name: 'Decision Tree',
+        def: 'Model berbentuk pohon yang membagi data secara rekursif berdasarkan fitur dengan information gain terbaik.',
+        data: 'Data tabular mixed (numerik + kategorik), butuh interpretasi visual yang mudah.',
+        cara: 'Pada setiap node: pilih fitur dan threshold yang memaksimalkan Gini impurity atau information gain.',
+        saran: 'Atur max_depth untuk cegah overfitting. Gunakan sebagai building block ensemble (RF, GBM).',
+        usecase: 'Sistem diagnosis medis berbasis gejala, credit scoring yang perlu diaudit regulasi.'
+      },
+      {
+        name: 'Linear Discriminant Analysis (LDA)',
+        def: 'Proyeksi data ke arah yang memaksimalkan separasi antar kelas, berasumsi distribusi Gaussian.',
+        data: 'Data numerik berdistribusi normal, semua kelas punya covariance matrix sama, fitur berkorelasi.',
+        cara: 'Memaksimalkan rasio between-class scatter terhadap within-class scatter. Proyeksi ke arah diskriminan.',
+        saran: 'Cek normalitas data dulu. Lebih baik dari PCA jika label tersedia untuk dimensionality reduction.',
+        usecase: 'Klasifikasi jenis wine dari komposisi kimia, face recognition dimensionality reduction.'
+      },
+      {
+        name: 'Quadratic Discriminant Analysis (QDA)',
+        def: 'Seperti LDA tapi tiap kelas punya covariance matrix sendiri, lebih fleksibel untuk non-linear.',
+        data: 'Data numerik berdistribusi normal, setiap kelas punya distribusi berbeda, dataset cukup besar.',
+        cara: 'Sama seperti LDA tapi tidak mengasumsikan shared covariance. Batas keputusan berbentuk kuadratik.',
+        saran: 'Pilih QDA jika kelas punya spread yang berbeda. Butuh lebih banyak data dari LDA.',
+        usecase: 'Deteksi jenis tumor dari biomarker yang distribusinya berbeda antar tipe tumor.'
+      },
+      {
+        name: 'Passive Aggressive Algorithm',
+        def: 'Online linear classifier yang agresif memperbarui bobot hanya saat ada kesalahan prediksi.',
+        data: 'Data stream real-time, text classification, data yang datang secara sequential.',
+        cara: 'Update model hanya ketika prediksi salah, dengan step size yang proporsional terhadap loss.',
+        saran: 'Ideal untuk online learning. Lebih agresif dari Perceptron, lebih baik untuk noisy data.',
+        usecase: 'Klasifikasi sentimen tweet secara real-time pada data stream sosial media.'
+      },
+      {
+        name: 'Nearest Centroid Classifier',
+        def: 'Assign kelas berdasarkan kedekatan ke centroid (rata-rata) tiap kelas.',
+        data: 'Data dengan kelas yang well-separated, low-dimensional, butuh model sangat cepat.',
+        cara: 'Hitung centroid tiap kelas dari training data. Prediksi: assign ke kelas centroid terdekat.',
+        saran: 'Sangat cepat dan sederhana. Cocok untuk baseline atau sistem real-time ringan.',
+        usecase: 'Klasifikasi dokumen sederhana berbasis representasi rata-rata TF-IDF.'
+      },
+    ]
+  },
+  {
+    id: 'ensemble',
+    name: 'Ensemble Methods',
+    icon: '🏗️',
+    color: '#facc6d',
+    group: 'supervised',
+    desc: 'Menggabungkan banyak model untuk performa lebih kuat dan stabil',
+    algos: [
+      {
+        name: 'Random Forest',
+        def: 'Ensemble ratusan decision tree dengan bagging dan feature randomness, sangat robust dan powerful.',
+        data: 'Data tabular besar, mixed types, missing values, outlier. Hampir selalu bekerja dengan baik.',
+        cara: 'Bootstrap sampling untuk setiap tree + random subset fitur di setiap split. Aggregate prediksi via voting/averaging.',
+        saran: 'Benchmark terbaik untuk data tabular umum. Mudah dipakai, sedikit tuning, performa bagus.',
+        usecase: 'Deteksi fraud transaksi perbankan, prediksi churn pelanggan, credit scoring.'
+      },
+      {
+        name: 'XGBoost',
+        def: 'Gradient boosting yang dioptimalkan dengan regularisasi, parallel computing, dan handling missing values built-in.',
+        data: 'Data tabular terstruktur, mixed types, fitur dengan berbagai skala, missing values.',
+        cara: 'Gradient boosting: setiap tree baru memperbaiki residual tree sebelumnya. Tambah regularisasi L1/L2.',
+        saran: 'Raja Kaggle untuk data tabular. Tuning: n_estimators + learning_rate + max_depth.',
+        usecase: 'Hampir semua kompetisi ML tabular: fraud detection, churn, demand forecasting.'
+      },
+      {
+        name: 'LightGBM',
+        def: 'Gradient boosting versi Microsoft yang jauh lebih cepat dari XGBoost untuk dataset besar.',
+        data: 'Dataset besar (> 100K), dimensi tinggi, butuh training cepat.',
+        cara: 'Leaf-wise tree growth (bukan level-wise), histogram-based splitting, GOSS sampling.',
+        saran: 'Pilih LightGBM untuk dataset besar. Lebih cepat dari XGBoost, performa setara atau lebih baik.',
+        usecase: 'Real-time fraud scoring, click-through rate prediction di advertising platform.'
+      },
+      {
+        name: 'CatBoost',
+        def: 'Gradient boosting dari Yandex yang handle categorical features secara native tanpa encoding manual.',
+        data: 'Data dengan banyak fitur kategorik, mixed types, tanpa perlu preprocessing encoding.',
+        cara: 'Ordered boosting untuk cegah overfitting + target statistics untuk encode kategorik otomatis.',
+        saran: 'Pilih CatBoost saat banyak kategorik untuk hemat preprocessing. Training lebih lambat dari LightGBM.',
+        usecase: 'Prediksi harga properti dari fitur lokasi kategorik, rekomendasi konten dengan user features.'
+      },
+      {
+        name: 'AdaBoost',
+        def: 'Boosting klasik yang meningkatkan bobot data yang salah diklasifikasi untuk fokus pada kasus sulit.',
+        data: 'Data tabular bersih tanpa banyak noise, masalah klasifikasi biner.',
+        cara: 'Iteratif: train weak learner, tingkatkan bobot misclassified samples, gabungkan dengan weighted voting.',
+        saran: 'Sensitif terhadap outlier dan noisy labels. Gunakan dengan data yang sudah bersih.',
+        usecase: 'Face detection (Viola-Jones), deteksi objek pada era sebelum deep learning.'
+      },
+      {
+        name: 'Gradient Boosting',
+        def: 'Boosting generik yang membangun model secara sekuensial, meminimalkan fungsi loss apapun.',
+        data: 'Data tabular terstruktur, regresi dan klasifikasi, berbagai fungsi loss yang bisa dikustomisasi.',
+        cara: 'Setiap model baru fit ke negative gradient (pseudo-residual) dari model ensemble sebelumnya.',
+        saran: 'Gunakan implementasi yang dioptimalkan (XGBoost/LightGBM). GBM vanilla terlalu lambat.',
+        usecase: 'Prediksi demand supply chain, scoring model medis yang butuh kustomisasi loss function.'
+      },
+      {
+        name: 'Stacking',
+        def: 'Meta-learning: prediksi model level-1 digunakan sebagai fitur untuk meta-model level-2.',
+        data: 'Semua jenis data — cocok saat ingin squeeze performa terakhir dari berbagai model berbeda.',
+        cara: 'Cross-validation untuk generate out-of-fold predictions sebagai fitur. Train meta-learner di atasnya.',
+        saran: 'Powerful tapi kompleks. Sering overfit jika tidak hati-hati. Gunakan di fase akhir modeling.',
+        usecase: 'Ensemble XGBoost + LightGBM + Neural Net untuk kompetisi prediksi dengan prize besar.'
+      },
+      {
+        name: 'Voting Classifier',
+        def: 'Menggabungkan prediksi beberapa model dengan voting mayoritas (hard) atau rata-rata probabilitas (soft).',
+        data: 'Semua jenis data — efektif saat model-model punya kekuatan di subset data berbeda.',
+        cara: 'Hard voting: majority vote kelas. Soft voting: rata-rata probabilitas dari semua model.',
+        saran: 'Soft voting biasanya lebih baik. Model yang digabungkan harus diverse, bukan semua yang sama.',
+        usecase: 'Sistem deteksi penyakit yang menggabungkan SVM + RF + Logistic Regression untuk robustness.'
+      },
+      {
+        name: 'Extra Trees (Extremely Randomized Trees)',
+        def: 'Seperti Random Forest tapi threshold split dipilih secara acak, lebih cepat dan sering lebih baik.',
+        data: 'Data tabular besar yang butuh training cepat, data dengan noise tinggi.',
+        cara: 'Seperti RF tapi tidak cari threshold optimal — pilih random. Kurangi variance lebih agresif.',
+        saran: 'Sering performa setara RF dengan training lebih cepat. Coba keduanya dan bandingkan.',
+        usecase: 'Real-time klasifikasi aktivitas dari data accelerometer dengan resource terbatas.'
+      },
+      {
+        name: 'Rotation Forest',
+        def: 'Ensemble tree yang merotasi feature space dengan PCA sebelum setiap tree dibangun.',
+        data: 'Data numerik berdimensi menengah di mana rotasi fitur bisa membuka informasi baru.',
+        cara: 'Bagi fitur ke subset → PCA tiap subset → gabung sebagai fitur baru → train decision tree.',
+        saran: 'Alternatif menarik untuk RF pada data numerik dense, tapi lebih lambat.',
+        usecase: 'Klasifikasi sinyal EEG atau data spektroskopi dari eksperimen ilmiah.'
+      },
+    ]
+  },
+  {
+    id: 'deep-learning',
+    name: 'Deep Learning',
+    icon: '🧠',
+    color: '#6dfacc',
+    group: 'deep-learning',
+    desc: 'Neural network berlapis untuk pola sangat kompleks dalam data besar',
+    algos: [
+      {
+        name: 'Multi-Layer Perceptron (MLP)',
+        def: 'Neural network dasar dengan fully-connected layers, fondasi semua arsitektur deep learning.',
+        data: 'Data numerik/tabular besar, fitur sudah diekstrak, tidak ada struktur spasial atau temporal.',
+        cara: 'Forward pass: aktivasi layer demi layer. Backward pass: backpropagation gradient untuk update weight.',
+        saran: 'Baseline deep learning untuk data tabular. Sering kalah dari XGBoost untuk data tabular kecil.',
+        usecase: 'Prediksi risiko kredit dari fitur keuangan yang sudah diekstrak, klasifikasi gambar dengan fitur HOG.'
+      },
+      {
+        name: 'Convolutional Neural Network (CNN)',
+        def: 'Neural network dengan operasi konvolusi yang menangkap pola spasial hierarkis dalam data grid.',
+        data: 'Data berbentuk grid: gambar, video, sinyal 1D, data spektral. Translational invariance penting.',
+        cara: 'Conv layers ekstrak fitur lokal → Pooling kurangi dimensi → Dense layers untuk klasifikasi.',
+        saran: 'Arsitektur standar untuk image tasks. Mulai dari pre-trained (ResNet, EfficientNet) jika data terbatas.',
+        usecase: 'Deteksi kanker dari X-ray dan MRI, pengenalan wajah, klasifikasi produk dari foto.'
+      },
+      {
+        name: 'Recurrent Neural Network (RNN)',
+        def: 'Neural network dengan loop rekurens yang memungkinkan persistensi informasi antar timestep.',
+        data: 'Data sekuensial: time series, teks, audio, sinyal. Urutan data penting untuk prediksi.',
+        cara: 'Hidden state ht = f(Wh × ht-1 + Wx × xt). State sebelumnya mempengaruhi prediksi saat ini.',
+        saran: 'Pada praktiknya, langsung pakai LSTM/GRU. Vanilla RNN sangat jarang dipakai karena vanishing gradient.',
+        usecase: 'Analisis sentimen teks sekuensial, prediksi harga saham dari time series historis.'
+      },
+      {
+        name: 'LSTM (Long Short-Term Memory)',
+        def: 'RNN yang dilengkapi gating mechanism untuk mengingat dependensi jangka panjang tanpa vanishing gradient.',
+        data: 'Sekuens panjang di mana konteks jauh masih relevan: teks panjang, time series kompleks.',
+        cara: 'Tiga gate (forget, input, output) mengontrol apa yang diingat dan dilupakan dari cell state.',
+        saran: 'Standar untuk sequence modeling sebelum era Transformer. Masih relevan untuk time series pendek.',
+        usecase: 'Machine translation, speech recognition, prediksi anomali dari log server jangka panjang.'
+      },
+      {
+        name: 'GRU (Gated Recurrent Unit)',
+        def: 'Versi LSTM yang lebih ringan dengan dua gate saja, performa serupa dengan parameter lebih sedikit.',
+        data: 'Sekuens data di mana resource terbatas atau butuh inferensi lebih cepat dari LSTM.',
+        cara: 'Reset gate dan update gate mengontrol aliran informasi. Tidak ada cell state terpisah seperti LSTM.',
+        saran: 'Pilih GRU saat resource terbatas atau sequence relatif pendek. Seringkali lebih cepat konvergen.',
+        usecase: 'Prediksi konsumsi energi real-time dari sensor IoT, klasifikasi gestur dari accelerometer.'
+      },
+      {
+        name: 'Transformer',
+        def: 'Arsitektur revolusioner berbasis self-attention yang memproses semua posisi secara paralel.',
+        data: 'Data sekuensial besar: teks, kode, audio, bahkan gambar (ViT). Butuh banyak data.',
+        cara: 'Self-attention: setiap token attend ke semua token lain. Multi-head untuk menangkap berbagai relasi.',
+        saran: 'Foundation of modern AI. Pakai pre-trained model (BERT, GPT, T5) via HuggingFace.',
+        usecase: 'Mesin pencari semantik, summarization dokumen, code completion, chatbot.'
+      },
+      {
+        name: 'BERT',
+        def: 'Bidirectional Transformer pre-trained pada masked language modeling, terbaik untuk pemahaman teks.',
+        data: 'Teks dalam bahasa natural. Fine-tuning dengan sedikit data labeled sudah memberikan hasil baik.',
+        cara: 'Pre-train dengan MLM (prediksi kata yang disembunyikan) dan NSP. Fine-tune untuk task spesifik.',
+        saran: 'Pilih BERT untuk NLU tasks (klasifikasi, NER, QA). Untuk generation, pilih GPT.',
+        usecase: 'Named entity recognition, analisis sentimen dokumen hukum, question answering internal.'
+      },
+      {
+        name: 'GPT / Large Language Models',
+        def: 'Autoregressive Transformer yang di-train untuk prediksi token berikutnya, generasi teks state-of-the-art.',
+        data: 'Teks. Butuh data masif untuk pre-training, sedikit data untuk fine-tuning atau in-context learning.',
+        cara: 'Unidirectional attention (kiri ke kanan). Generasi token demi token secara autoregressive.',
+        saran: 'Pakai model yang sudah ada (GPT-4, Claude, Llama, Mistral). Fine-tune jika perlu domain khusus.',
+        usecase: 'Chatbot, code generation, penulisan konten, summarization, instruksi following.'
+      },
+      {
+        name: 'Vision Transformer (ViT)',
+        def: 'Transformer yang diterapkan pada gambar dengan memecah gambar menjadi patch 16×16.',
+        data: 'Dataset gambar besar (ImageNet scale). Kurang efektif untuk dataset kecil tanpa pre-training.',
+        cara: 'Pecah gambar → patch embedding → positional encoding → Transformer encoder → klasifikasi.',
+        saran: 'Pre-train ViT di dataset besar, lalu fine-tune. Untuk dataset kecil, CNN masih lebih baik.',
+        usecase: 'Klasifikasi gambar satelit resolusi tinggi, analisis dokumen visual, medical imaging.'
+      },
+      {
+        name: 'Graph Neural Network (GNN)',
+        def: 'Neural network untuk data berbentuk graf dengan node, edge, dan hubungan kompleks antar entitas.',
+        data: 'Data relasional: social network, molekul kimia, knowledge graph, jaringan transaksi.',
+        cara: 'Message passing: setiap node mengumpulkan informasi dari tetangganya, update representasinya.',
+        saran: 'Pilih variant: GCN untuk klasifikasi node, GAT untuk graph dengan attention, GraphSAGE untuk skala besar.',
+        usecase: 'Prediksi interaksi obat-protein, deteksi fraud di jaringan transaksi, rekomendasi social network.'
+      },
+      {
+        name: 'Capsule Network',
+        def: 'Neural network yang menggunakan capsule (grup neuron) untuk encoding orientasi dan pose objek.',
+        data: 'Gambar di mana orientasi spasial dan pose penting, lebih robust terhadap transformasi geometrik.',
+        cara: 'Capsule encoding pose + aktivasi. Dynamic routing: capsule lower level route ke capsule higher level.',
+        saran: 'Menjanjikan secara teoritis tapi belum mengalahkan CNN di praktik umum. Masih dalam riset.',
+        usecase: 'Pengenalan karakter tulisan tangan dari berbagai sudut, segmentasi objek berbasis pose.'
+      },
+      {
+        name: 'Neural ODE',
+        def: 'Model yang mendefinisikan dinamika hidden state sebagai ODE, interpolasi kontinu antar timestep.',
+        data: 'Time series dengan timestep tidak reguler, data fisika dengan continuous dynamics.',
+        cara: 'dh/dt = f(h, t, θ). Gunakan ODE solver untuk forward pass. Adjoint method untuk backward.',
+        saran: 'Sangat powerful untuk irregular time series. Lebih lambat dari RNN/LSTM dalam praktik.',
+        usecase: 'Pemodelan dinamika fisiologis pasien dari data EHR dengan timestep tidak beraturan.'
+      },
+      {
+        name: 'Mamba (State Space Model)',
+        def: 'Arsitektur SSM terbaru yang linear complexity, alternatif efisien Transformer untuk sekuens panjang.',
+        data: 'Sekuens sangat panjang (dokumen panjang, genomik, audio) di mana Transformer terlalu mahal.',
+        cara: 'Selective State Space: input-dependent selection mechanism. Linear scan bukan attention O(n²).',
+        saran: 'Sangat baru (2023). Menjanjikan untuk sequence modeling skala besar. Ekosistem masih berkembang.',
+        usecase: 'Analisis sekuens DNA panjang, pemrosesan dokumen sangat panjang, audio generation.'
+      },
+    ]
+  },
+  {
+    id: 'generative',
+    name: 'Generative Models',
+    icon: '🎨',
+    color: '#fa9b6d',
+    group: 'deep-learning',
+    desc: 'Model yang bisa membuat data baru yang realistis',
+    algos: [
+      {
+        name: 'GAN (Generative Adversarial Network)',
+        def: 'Dua jaringan (generator vs discriminator) bersaing untuk menghasilkan data sintetis yang sangat realistis.',
+        data: 'Gambar, audio, video. Butuh dataset besar dan homogen. Training tidak stabil.',
+        cara: 'Generator: buat data dari noise. Discriminator: bedakan real vs fake. Minimax game.',
+        saran: 'Mode collapse sering terjadi. Gunakan WGAN atau StyleGAN untuk stabilitas lebih baik.',
+        usecase: 'Generasi wajah sintetis (ThisPersonDoesNotExist), augmentasi data medis, deepfake.'
+      },
+      {
+        name: 'Variational Autoencoder (VAE)',
+        def: 'Autoencoder probabilistik yang belajar distribusi laten kontinu, cocok untuk generasi terkontrol.',
+        data: 'Gambar, teks, data molekuler. Butuh asumsi distribusi laten Gaussian.',
+        cara: 'Encoder: output mean & variance distribusi laten. Reparameterization trick. Decoder rekonstruksi.',
+        saran: 'Output lebih blurry dari GAN tapi laten space lebih smooth untuk interpolasi dan kontrol.',
+        usecase: 'Desain molekul obat baru, face morphing yang smooth, anomaly detection berbasis rekonstruksi.'
+      },
+      {
+        name: 'Diffusion Model',
+        def: 'Belajar membalik proses penambahan noise secara bertahap, menghasilkan kualitas gambar terbaik saat ini.',
+        data: 'Gambar, audio, video. Butuh dataset besar dan GPU/TPU kuat untuk training.',
+        cara: 'Forward: tambah noise bertahap ke data. Reverse: train U-Net untuk denoise step demi step.',
+        saran: 'State-of-the-art untuk image generation. Inferensi lebih lambat dari GAN tapi kualitas lebih baik.',
+        usecase: 'Stable Diffusion, DALL-E, Midjourney, text-to-image, image editing, drug discovery.'
+      },
+      {
+        name: 'Autoencoder',
+        def: 'Neural network yang belajar kompresi (encoder) dan rekonstruksi (decoder) data secara unsupervised.',
+        data: 'Gambar, sensor data, teks. Cocok untuk kompresi dan representasi tanpa label.',
+        cara: 'Encoder compress ke bottleneck → Decoder rekonstruksi. Minimisasi reconstruction loss.',
+        saran: 'Gunakan untuk: dimensionality reduction non-linear, denoising, anomaly detection, pre-training.',
+        usecase: 'Denoising foto satelit, kompresi data medis, deteksi anomali mesin dari sensor data.'
+      },
+      {
+        name: 'Normalizing Flows',
+        def: 'Model generatif yang belajar transformasi invertible dari distribusi sederhana ke distribusi data kompleks.',
+        data: 'Data kontinu apa pun di mana exact likelihood computation penting (bukan hanya sampling).',
+        cara: 'Komposisi transformasi invertible dengan Jacobian tractable. Exact density estimation via change of variable.',
+        saran: 'Lebih teoretically sound dari VAE/GAN tapi lebih lambat dan kompleks diimplementasi.',
+        usecase: 'Density estimation untuk anomaly detection, generasi molekul dengan kontrol probabilistik ketat.'
+      },
+      {
+        name: 'Restricted Boltzmann Machine (RBM)',
+        def: 'Model generatif berbasis energy function dengan layer visible dan hidden, cikal bakal deep learning.',
+        data: 'Data biner atau kontinu, butuh data cukup besar untuk konvergensi yang baik.',
+        cara: 'Contrastive Divergence: Gibbs sampling untuk approximate gradient. Bidirectional connection.',
+        saran: 'Sudah banyak digantikan VAE/GAN. Masih relevan sebagai building block DBN atau collaborative filtering.',
+        usecase: 'Sistem rekomendasi (Netflix Prize), feature learning sebagai pre-training layer neural network.'
+      },
+    ]
+  },
+  {
+    id: 'clustering',
+    name: 'Clustering',
+    icon: '🔮',
+    color: '#6db8fa',
+    group: 'unsupervised',
+    desc: 'Menemukan struktur dan kelompok alami dalam data tanpa label',
+    algos: [
+      {
+        name: 'K-Means',
+        def: 'Pengelompokan iteratif ke K cluster dengan meminimalkan jarak ke centroid masing-masing.',
+        data: 'Data numerik, cluster berbentuk bulat dan berukuran serupa, jumlah cluster sudah diketahui.',
+        cara: 'Inisialisasi K centroid → assign tiap titik ke centroid terdekat → update centroid → ulangi.',
+        saran: 'Scale fitur dulu! Gunakan K-Means++ untuk inisialisasi lebih baik. Coba Elbow method untuk K.',
+        usecase: 'Segmentasi pelanggan berdasarkan RFM (Recency, Frequency, Monetary), kompresi warna gambar.'
+      },
+      {
+        name: 'DBSCAN',
+        def: 'Density-based clustering yang menemukan cluster berbentuk bebas dan otomatis label outlier.',
+        data: 'Data dengan cluster bentuk tidak beraturan, ada noise/outlier yang perlu diidentifikasi.',
+        cara: 'Core points (≥ MinPts dalam epsilon radius), expand cluster dari core points. Outlier = noise.',
+        saran: 'Tidak perlu tentukan jumlah cluster. Sensitif terhadap eps dan MinPts, tuning perlu hati-hati.',
+        usecase: 'Deteksi anomali geografis dari GPS, analisis pola spasial kejahatan, clustering dokumen.'
+      },
+      {
+        name: 'HDBSCAN',
+        def: 'Versi hierarkis DBSCAN yang lebih robust untuk cluster dengan kepadatan berbeda-beda.',
+        data: 'Data dengan cluster kepadatan bervariasi, jumlah cluster tidak diketahui, ada outlier.',
+        cara: 'Bangun minimum spanning tree dari mutual reachability distances → extract stable clusters.',
+        saran: 'Pilihan utama untuk clustering eksplorasi modern. Lebih baik dari DBSCAN di hampir semua kasus.',
+        usecase: 'Clustering embedding teks dari LLM untuk topic discovery, analisis scRNA-seq data genomik.'
+      },
+      {
+        name: 'Gaussian Mixture Model (GMM)',
+        def: 'Model probabilistik yang mengasumsikan data berasal dari campuran beberapa distribusi Gaussian.',
+        data: 'Data numerik dengan cluster yang overlapping dan distribusi Gaussian, soft assignment diperlukan.',
+        cara: 'Expectation-Maximization: E-step (hitung probabilitas membership) → M-step (update parameter).',
+        saran: 'Lebih fleksibel dari K-Means karena menghasilkan soft assignment. Pilih jumlah komponen via BIC.',
+        usecase: 'Segmentasi pengguna dengan perilaku overlapping, speaker diarization dalam audio.'
+      },
+      {
+        name: 'Agglomerative Clustering',
+        def: 'Hierarchical clustering bottom-up: mulai dari setiap titik sebagai cluster sendiri, merge secara bertahap.',
+        data: 'Dataset kecil-menengah (< 10K) yang butuh dendrogram dan hierarki cluster yang dapat divisualisasi.',
+        cara: 'Hitung jarak antar semua cluster → merge dua terdekat → ulangi. Linkage: single, complete, average, Ward.',
+        saran: 'Ward linkage biasanya terbaik. Gunakan dendrogram untuk pilih jumlah cluster secara visual.',
+        usecase: 'Analisis filogenetik DNA, clustering dokumen hukum untuk kategorisasi hierarkis.'
+      },
+      {
+        name: 'Spectral Clustering',
+        def: 'Clustering menggunakan eigenvectors dari similarity matrix, sangat baik untuk cluster non-konveks.',
+        data: 'Data dengan cluster berbentuk non-konveks (ring, crescent), graph/network data.',
+        cara: 'Bangun similarity matrix → hitung Laplacian → ambil K eigenvectors → jalankan K-Means di space baru.',
+        saran: 'Mahal secara komputasi O(n³). Tidak scalable untuk dataset besar. Pilih kernel yang tepat.',
+        usecase: 'Deteksi komunitas dalam social network, segmentasi gambar berbasis warna dan tekstur.'
+      },
+      {
+        name: 'Mean Shift',
+        def: 'Iteratif geser titik ke arah kepadatan data tertinggi, cluster muncul secara alami tanpa tentukan K.',
+        data: 'Data numerik di mana jumlah cluster tidak diketahui, distribusi data smooth.',
+        cara: 'Untuk setiap titik: hitung mean dari semua titik dalam bandwidth → pindah ke sana → ulangi sampai konvergen.',
+        saran: 'Tidak perlu tentukan K tapi butuh pilih bandwidth. Lambat untuk dataset besar.',
+        usecase: 'Segmentasi warna dalam image processing, tracking objek dalam video surveillance.'
+      },
+      {
+        name: 'Self-Organizing Map (SOM)',
+        def: 'Neural network yang memproyeksikan data high-dimensional ke peta 2D sambil menjaga topologi.',
+        data: 'Data berdimensi tinggi yang ingin divisualisasi dan di-cluster sekaligus.',
+        cara: 'Kompetisi antar neuron: winner neuron dan tetangganya diupdate ke arah input. Neighborhood function menyusut.',
+        saran: 'Berguna untuk eksplorasi data dan visualisasi. Kurang populer karena sulit interpretasi cluster boundary.',
+        usecase: 'Visualisasi data genomik multidimensi, analisis pola penggunaan energi dari ribuan meteran.'
+      },
+      {
+        name: 'Affinity Propagation',
+        def: 'Menemukan exemplar alami dalam data melalui message-passing antar semua pasang titik data.',
+        data: 'Dataset kecil-menengah di mana jumlah cluster tidak diketahui dan exemplar nyata diinginkan.',
+        cara: 'Responsibility message + Availability message iteratif antar semua titik sampai convergence.',
+        saran: 'Tidak scalable untuk data besar (O(n²)). Tapi menghasilkan exemplar nyata yang interpretatif.',
+        usecase: 'Clustering foto untuk menemukan gambar representatif dari koleksi besar, summarization dokumen.'
+      },
+    ]
+  },
+  {
+    id: 'dimred',
+    name: 'Dimensionality Reduction',
+    icon: '🌐',
+    color: '#b86dfa',
+    group: 'unsupervised',
+    desc: 'Meringkas data berdimensi tinggi ke representasi lebih kecil',
+    algos: [
+      {
+        name: 'PCA (Principal Component Analysis)',
+        def: 'Menemukan arah variasi terbesar dalam data linear, proyeksi ke dimensi lebih rendah.',
+        data: 'Data numerik kontinu, hubungan antar fitur linear, butuh kompresi cepat.',
+        cara: 'Hitung covariance matrix → eigendecomposition → ambil K eigenvectors dengan eigenvalue terbesar.',
+        saran: 'Selalu standarisasi data dulu. Lihat explained variance ratio untuk pilih K komponen.',
+        usecase: 'Preprocessing sebelum modeling, visualisasi data genomik, kompresi fitur gambar wajah.'
+      },
+      {
+        name: 't-SNE',
+        def: 'Proyeksi non-linear ke 2D/3D yang menjaga struktur lokal, sangat baik untuk visualisasi cluster.',
+        data: 'Data apapun untuk visualisasi. Tidak cocok untuk downstream modeling atau inference baru.',
+        cara: 'Modelkan kemiripan sebagai distribusi Gaussian di high-dim, Student-t di low-dim. Minimize KL divergence.',
+        saran: 'Hanya untuk visualisasi. Setiap run berbeda (stokastik). Pilih perplexity antara 5-50.',
+        usecase: 'Visualisasi cluster embedding kata (Word2Vec), eksplorasi cluster sel kanker dari scRNA-seq.'
+      },
+      {
+        name: 'UMAP',
+        def: 'Dimensionality reduction yang lebih cepat dari t-SNE dengan preservasi struktur global lebih baik.',
+        data: 'Data apapun untuk visualisasi dan (dengan hati-hati) feature extraction downstream.',
+        cara: 'Bangun fuzzy simplicial complex di high-dim → optimasi low-dim representation via cross-entropy.',
+        saran: 'Default pilihan untuk visualisasi modern. Lebih cepat, lebih deterministik, lebih scalable dari t-SNE.',
+        usecase: 'Eksplorasi data scRNA-seq, visualisasi embedding dokumen dari jutaan artikel.'
+      },
+      {
+        name: 'ICA (Independent Component Analysis)',
+        def: 'Memisahkan sinyal campuran menjadi komponen statistik yang independen satu sama lain.',
+        data: 'Data yang merupakan campuran linear dari sumber independen: audio, EEG, fMRI.',
+        cara: 'Maksimalkan non-Gaussianity (negentropy) komponen untuk menemukan sumber independen.',
+        saran: 'Berbeda dari PCA: PCA uncorrelated, ICA independent. Gunakan untuk blind source separation.',
+        usecase: 'Memisahkan sinyal EEG dari artifact otot, "cocktail party problem" pemisahan suara.'
+      },
+      {
+        name: 'LDA (Latent Dirichlet Allocation)',
+        def: 'Model generatif probabilistik untuk menemukan topik tersembunyi dalam koleksi dokumen teks.',
+        data: 'Koleksi dokumen teks dalam format bag-of-words. Butuh cukup banyak dokumen (ratusan+).',
+        cara: 'Asumsikan dokumen adalah campuran topik. Topik adalah distribusi atas kata. Infer via variational Bayes.',
+        saran: 'Pilih jumlah topik via perplexity atau coherence score. Preprocessing teks penting (stop words, stemming).',
+        usecase: 'Analisis topik jutaan artikel berita, discovery tema dari review produk e-commerce.'
+      },
+      {
+        name: 'Truncated SVD',
+        def: 'SVD yang hanya menghitung K singular values terbesar, efisien untuk data sparse berdimensi tinggi.',
+        data: 'Data sparse: document-term matrix, user-item matrix. Dimensi sangat tinggi.',
+        cara: 'Dekomposisi A ≈ UΣV^T dengan hanya K komponen. Efficient untuk sparse matrix via iterative methods.',
+        saran: 'Pilihan utama untuk text data (Latent Semantic Analysis). Lebih efisien dari PCA untuk sparse data.',
+        usecase: 'Latent Semantic Analysis untuk information retrieval, matrix factorization sistem rekomendasi.'
+      },
+      {
+        name: 'Factor Analysis',
+        def: 'Menemukan faktor laten yang menjelaskan korelasi antar variabel terobservasi dengan error term.',
+        data: 'Data survei/psikometri numerik di mana faktor laten yang tidak terukur dimodelkan secara eksplisit.',
+        cara: 'X = Λf + ε. Estimate factor loadings Λ via MLE atau principal axis factoring.',
+        saran: 'Berbeda dari PCA: Factor Analysis modelkan unique variance per variabel. Interpretasi lebih kaya.',
+        usecase: 'Analisis psikometri (Big Five personality), validasi konstruk kuesioner penelitian.'
+      },
+    ]
+  },
+  {
+    id: 'timeseries',
+    name: 'Time Series',
+    icon: '📊',
+    color: '#faa56d',
+    group: 'supervised',
+    desc: 'Prediksi dan analisis data yang berurutan berdasarkan waktu',
+    algos: [
+      {
+        name: 'ARIMA / SARIMA',
+        def: 'Model statistik klasik untuk time series stasioner dengan komponen autoregressive dan moving average.',
+        data: 'Time series univariat stasioner (atau bisa dibuat stasioner), hubungan linear antar lag.',
+        cara: 'AR: ketergantungan pada nilai masa lalu. I: differencing untuk stasioneritas. MA: error masa lalu.',
+        saran: 'Gunakan ACF/PACF untuk pilih p, d, q. Cek stasioneritas dengan ADF test dulu.',
+        usecase: 'Prediksi penjualan bulanan, forecasting permintaan produk musiman, prediksi tingkat inflasi.'
+      },
+      {
+        name: 'Prophet (Facebook)',
+        def: 'Model forecasting yang robust terhadap missing values, seasonality, dan trend changes.',
+        data: 'Time series bisnis dengan seasonality (mingguan, tahunan), holiday effects, data tidak reguler.',
+        cara: 'Additive model: trend + seasonality + holidays + error. Trend: piecewise linear atau logistic.',
+        saran: 'Sangat mudah dipakai, interpretable, dan robust. Default pilihan untuk bisnis forecasting.',
+        usecase: 'Prediksi traffic website, forecasting penjualan retail dengan hari besar, forecasting penggunaan energi.'
+      },
+      {
+        name: 'Temporal Fusion Transformer (TFT)',
+        def: 'Transformer untuk multi-horizon forecasting dengan interpretability dan multi-input support.',
+        data: 'Time series multivariat dengan static covariates, known future inputs, dan historical data.',
+        cara: 'Gating mechanisms + attention untuk select relevan features. Variable selection network untuk interpretability.',
+        saran: 'State-of-the-art untuk multivariat time series. Butuh lebih banyak data dari model statistik.',
+        usecase: 'Prediksi permintaan retail multivariat, forecasting traffic jaringan telekomunikasi.'
+      },
+      {
+        name: 'N-BEATS / N-HiTS',
+        def: 'Pure neural network untuk univariate forecasting dengan decomposition blocks yang interpretable.',
+        data: 'Time series univariat dalam jumlah besar, pure ML approach tanpa domain knowledge.',
+        cara: 'Stack of blocks dengan backward dan forward residual links. Decompose ke trend dan seasonality.',
+        saran: 'N-HiTS lebih efisien dari N-BEATS untuk long horizon forecasting.',
+        usecase: 'Forecasting skala besar (M4/M5 competitions), prediksi demand ribuan SKU sekaligus.'
+      },
+      {
+        name: 'DeepAR',
+        def: 'Model autoregressive berbasis RNN dari Amazon yang output distribusi probabilistik (bukan point forecast).',
+        data: 'Banyak time series related (ratusan-ribuan), butuh probabilistic forecast dengan uncertainty.',
+        cara: 'Train satu model pada semua time series. Output parameter distribusi Gaussian atau Negative Binomial.',
+        saran: 'Sangat baik untuk retail/demand forecasting dengan banyak SKU. Probabilistic output sangat berguna.',
+        usecase: 'Inventory planning untuk ribuan produk sekaligus, prediksi konsumsi listrik per rumah tangga.'
+      },
+      {
+        name: 'GARCH',
+        def: 'Model untuk volatilitas time series keuangan, di mana variance berubah seiring waktu.',
+        data: 'Return aset keuangan: saham, forex, cryptocurrency. Data di mana volatility clustering terjadi.',
+        cara: 'Variance saat ini tergantung pada squared past residuals (ARCH) dan past variance (GARCH).',
+        saran: 'Standar industri untuk risk modeling keuangan. Perlu stasioneritas return (bukan harga).',
+        usecase: 'Value at Risk (VaR) calculation, option pricing, risk management portofolio investasi.'
+      },
+      {
+        name: 'Exponential Smoothing (Holt-Winters)',
+        def: 'Metode klasik yang memberikan bobot exponentially decreasing pada observasi masa lalu.',
+        data: 'Time series univariat dengan trend dan/atau seasonality, dataset sederhana tidak perlu DL.',
+        cara: 'Simple ES: ŝₜ = αxₜ + (1-α)ŝₜ₋₁. Triple ES tambahkan trend (Holt) dan seasonality (Winters).',
+        saran: 'Sangat cepat dan robust. Pilihan bagus ketika data terbatas atau butuh baseline kuat.',
+        usecase: 'Prediksi penjualan toko ritel sederhana, forecasting call center volume mingguan.'
+      },
+    ]
+  },
+  {
+    id: 'reinforcement',
+    name: 'Reinforcement Learning',
+    icon: '🎮',
+    color: '#6dfacc',
+    group: 'reinforcement',
+    desc: 'Agen belajar optimal dari interaksi lingkungan via reward dan punishment',
+    algos: [
+      {
+        name: 'Q-Learning',
+        def: 'Model-free RL yang belajar nilai Q(state, action) untuk menemukan kebijakan optimal melalui trial and error.',
+        data: 'Environment diskrit, state dan action space tidak terlalu besar, dapat disimulasikan.',
+        cara: 'Q(s,a) ← Q(s,a) + α[r + γ max Q(s\',a\') - Q(s,a)]. Bellman equation update iteratif.',
+        saran: 'Hanya untuk state/action space kecil. Untuk besar, pakai DQN dengan neural network.',
+        usecase: 'Kontrol traffic light sederhana, robot navigasi dalam maze, game sederhana.'
+      },
+      {
+        name: 'Deep Q-Network (DQN)',
+        def: 'Q-Learning dengan neural network sebagai function approximator untuk state space besar seperti piksel.',
+        data: 'Environment dengan state space besar (gambar, sensor). Action space diskrit.',
+        cara: 'Neural network approx Q-values. Experience replay + target network untuk stabilitas training.',
+        saran: 'Gunakan rainbow DQN (Dueling + Double + Prioritized Replay) untuk performa terbaik.',
+        usecase: 'AI bermain Atari dari piksel layar, kontrol robot warehouse dari kamera overhead.'
+      },
+      {
+        name: 'PPO (Proximal Policy Optimization)',
+        def: 'Policy gradient yang stabil dengan clipping objective untuk mencegah update terlalu besar.',
+        data: 'Environment kontinu atau diskrit. De facto standard untuk training RL modern.',
+        cara: 'Clip ratio π_θ/π_θ_old dalam [1-ε, 1+ε]. Advantage estimation via GAE.',
+        saran: 'Default pilihan untuk RL praktis. Dipakai di ChatGPT (RLHF), OpenAI Five, robotics.',
+        usecase: 'RLHF untuk fine-tuning LLM, kontrol drone otonom, game AI (Dota 2, StarCraft).'
+      },
+      {
+        name: 'SAC (Soft Actor-Critic)',
+        def: 'Off-policy actor-critic dengan entropy maximization untuk eksplorasi yang lebih baik dan sample efficiency.',
+        data: 'Environment kontinu (robotics), butuh sample efficiency tinggi karena data mahal.',
+        cara: 'Maksimalkan reward + temperature×entropy. Dua Q-networks untuk mengurangi overestimation.',
+        saran: 'Pilihan terbaik untuk continuous control tasks. Lebih sample-efficient dari PPO.',
+        usecase: 'Manipulasi robot tangan, locomotion robot quadruped, autonomous vehicle control.'
+      },
+      {
+        name: 'Multi-Armed Bandit',
+        def: 'RL paling sederhana: pilih dari beberapa aksi tanpa state untuk memaksimalkan cumulative reward.',
+        data: 'Tidak ada state, hanya pilihan aksi dengan reward probabilistik. Data online.',
+        cara: 'Explore: coba aksi baru. Exploit: pilih aksi terbaik sejauh ini. Balance via epsilon-greedy/UCB.',
+        saran: 'Sangat efisien untuk A/B testing dan personalisasi. Lebih baik dari A/B test konvensional.',
+        usecase: 'Optimasi A/B testing iklan online, personalisasi urutan konten artikel untuk pengguna.'
+      },
+      {
+        name: 'Thompson Sampling',
+        def: 'Bandit algorithm berbasis Bayesian yang sample dari posterior distribusi reward untuk keputusan.',
+        data: 'Data online streaming, butuh balance exploration-exploitation yang probabilistik dan adaptif.',
+        cara: 'Maintain prior distribusi reward per aksi → sample dari posterior → pilih aksi dengan sample tertinggi.',
+        saran: 'Seringkali outperform UCB secara empiris. Posterior bisa berupa Beta (biner) atau Gaussian (kontinu).',
+        usecase: 'Personalisasi rekomendasi konten real-time, optimasi dosis obat dalam adaptive clinical trial.'
+      },
+      {
+        name: 'MuZero / AlphaZero',
+        def: 'Model-based RL yang belajar world model secara implisit, state-of-the-art untuk game planning.',
+        data: 'Environment berbasis game atau simulasi di mana planning penting. Compute intensif.',
+        cara: 'Pelajari representation, dynamics, prediction functions. MCTS planning menggunakan learned model.',
+        saran: 'Compute requirement sangat tinggi. Untuk penelitian atau resource besar.',
+        usecase: 'Go, Chess, Shogi (AlphaZero), video games tanpa rules diberikan (MuZero), protein folding.'
+      },
+    ]
+  },
+  {
+    id: 'anomaly',
+    name: 'Anomaly Detection',
+    icon: '🔍',
+    color: '#fadc6d',
+    group: 'unsupervised',
+    desc: 'Identifikasi data yang menyimpang dari pola normal',
+    algos: [
+      {
+        name: 'Isolation Forest',
+        def: 'Mengisolasi anomali dengan random partitioning — anomali lebih mudah diisolasi dari data normal.',
+        data: 'Data numerik berdimensi menengah-tinggi. Anomali adalah titik yang jarang/berbeda dari mayoritas.',
+        cara: 'Bangun banyak random tree. Anomali: path length pendek (mudah diisolasi). Normal: path panjang.',
+        saran: 'Algoritma anomaly detection pertama yang harus dicoba. Cepat, scalable, sedikit hyperparameter.',
+        usecase: 'Deteksi fraud kartu kredit real-time, anomaly detection pada data log server, quality control pabrik.'
+      },
+      {
+        name: 'One-Class SVM',
+        def: 'Belajar batas dari data normal saja untuk mengidentifikasi outlier tanpa contoh anomali.',
+        data: 'Data ketika anomali tidak tersedia saat training. Dimensi menengah, dataset tidak terlalu besar.',
+        cara: 'Cari hyperplane yang memisahkan data normal dari origin di feature space (via kernel).',
+        saran: 'Sensitif terhadap kernel dan hyperparameter. Kurang scalable dari Isolation Forest untuk data besar.',
+        usecase: 'Deteksi malware baru yang belum dikenal, fraud detection saat labeled fraud data tidak tersedia.'
+      },
+      {
+        name: 'Local Outlier Factor (LOF)',
+        def: 'Deteksi anomali berdasarkan perbandingan kepadatan lokal titik vs tetangganya.',
+        data: 'Data dengan kepadatan tidak merata, anomali relatif terhadap konteks lokal (bukan global).',
+        cara: 'Hitung reachability distance antar titik → local reachability density → LOF score (ratio density).',
+        saran: 'Baik untuk anomali lokal yang tidak terdeteksi algoritma global. Tidak scalable untuk data sangat besar.',
+        usecase: 'Deteksi sensor rusak dalam array IoT, anomali pada data manufaktur dengan pola kepadatan berbeda.'
+      },
+      {
+        name: 'Autoencoder (Anomaly)',
+        def: 'Train autoencoder pada data normal. Anomali memiliki rekonstruksi error tinggi karena tidak dikenal.',
+        data: 'Data kompleks berdimensi tinggi: gambar, sinyal, teks. Butuh banyak data normal untuk training.',
+        cara: 'Train → rekonstruksi hanya data normal → pada inference, anomali menghasilkan error rekonstruksi tinggi.',
+        saran: 'Powerful untuk data kompleks. Tentukan threshold error via distribusi error pada validation set.',
+        usecase: 'Deteksi kerusakan mesin dari vibration data, anomaly detection pada gambar produk di lini produksi.'
+      },
+      {
+        name: 'COPOD (Copula-Based Outlier Detection)',
+        def: 'Anomaly detection berbasis copula yang sangat cepat, interpretable, dan bebas hyperparameter.',
+        data: 'Data numerik multivariat. Bekerja baik untuk dimensi menengah.',
+        cara: 'Estimasi empirical copula → hitung tail probability tiap dimensi → gabungkan untuk outlier score.',
+        saran: 'Sangat cepat dan tidak butuh hyperparameter. Cocok untuk screening awal cepat.',
+        usecase: 'Monitoring kualitas data real-time dalam pipeline ETL, quality gate otomatis data warehouse.'
+      },
+    ]
+  },
+  {
+    id: 'bayesian',
+    name: 'Probabilistic & Bayesian',
+    icon: '🎲',
+    color: '#6dfacc',
+    group: 'unsupervised',
+    desc: 'Model berbasis probabilitas dan inference Bayesian',
+    algos: [
+      {
+        name: 'Bayesian Network',
+        def: 'Graf probabilistik yang memodelkan hubungan kausal dan dependensi kondisional antar variabel.',
+        data: 'Data dengan hubungan kausal yang diketahui/ingin dimodelkan, domain expert knowledge tersedia.',
+        cara: 'DAG representasi → Conditional Probability Tables → inference via Variable Elimination atau MCMC.',
+        saran: 'Sangat interpretable dan bisa incorporate domain knowledge. Struktur learning bisa mahal.',
+        usecase: 'Diagnosis medis (hubungan gejala-penyakit), fraud detection dengan causal reasoning.'
+      },
+      {
+        name: 'Hidden Markov Model (HMM)',
+        def: 'Model statistik untuk sekuens dengan state tersembunyi yang mengikuti proses Markov.',
+        data: 'Sekuens temporal dengan state laten tidak terobservasi: teks, audio, DNA, cuaca.',
+        cara: 'Baum-Welch (EM) untuk training. Viterbi untuk decoding state sequence optimal.',
+        saran: 'Cocok untuk sequence dengan state yang jelas dan jumlah state diketahui. Digantikan deep learning untuk audio.',
+        usecase: 'Speech recognition klasik, analisis sekuens protein DNA, POS tagging teks NLP.'
+      },
+      {
+        name: 'Kalman Filter',
+        def: 'Filter optimal untuk estimasi state sistem dinamis linear Gaussian dari observasi noisy secara real-time.',
+        data: 'Time series dengan noise Gaussian, sistem dinamis linear, butuh estimasi real-time.',
+        cara: 'Predict step (model dinamis) → Update step (incorporasi measurement). Recursive, sangat efisien.',
+        saran: 'Extended Kalman Filter (EKF) atau Unscented KF (UKF) untuk sistem non-linear.',
+        usecase: 'Tracking posisi GPS kendaraan otonom, estimasi state roket, sensor fusion pada drone.'
+      },
+      {
+        name: 'MCMC (Markov Chain Monte Carlo)',
+        def: 'Sampling dari distribusi posterior kompleks yang tidak bisa dihitung secara analitik.',
+        data: 'Model Bayesian kompleks dengan distribusi posterior yang intractable, N tidak terlalu besar.',
+        cara: 'Metropolis-Hastings atau HMC: bangun Markov chain yang stationary distribution-nya adalah posterior.',
+        saran: 'PyMC atau Stan untuk implementasi. Butuh convergence checking (R-hat, ESS). Lambat untuk data besar.',
+        usecase: 'Bayesian inference untuk model klinis kompleks, estimasi parameter model epidemi.'
+      },
+      {
+        name: 'Conditional Random Field (CRF)',
+        def: 'Model diskriminatif untuk labeling sekuens yang mempertimbangkan konteks global seluruh sekuens.',
+        data: 'Sekuens teks untuk labeling: NER, POS tagging, sequence segmentation.',
+        cara: 'Model joint probability P(y|x) dari seluruh label sequence. Viterbi untuk decoding. Training via gradient.',
+        saran: 'Sering dipakai sebagai lapisan terakhir di atas LSTM atau BERT untuk sequence labeling tasks.',
+        usecase: 'Named Entity Recognition, Part-of-Speech tagging, segmentasi batas kata dalam NLP.'
+      },
+    ]
+  },
+  {
+    id: 'association',
+    name: 'Association Rules',
+    icon: '🔗',
+    color: '#fa6db8',
+    group: 'unsupervised',
+    desc: 'Menemukan pola co-occurrence dan asosiasi dalam data transaksi',
+    algos: [
+      {
+        name: 'Apriori',
+        def: 'Menemukan frequent itemsets dengan candidate generation bertahap menggunakan Apriori principle.',
+        data: 'Data transaksi/basket market, item yang co-occur penting, dataset kecil-menengah.',
+        cara: 'Generate kandidat → prune yang tidak frequent → generate lebih panjang. Bottom-up iteratif.',
+        saran: 'Lambat untuk large itemsets. Pilih FP-Growth untuk dataset besar.',
+        usecase: 'Market basket analysis: pembeli susu sering beli roti, analisis pola kunjungan webpage.'
+      },
+      {
+        name: 'FP-Growth',
+        def: 'Association rule mining yang efisien menggunakan FP-tree tanpa candidate generation.',
+        data: 'Data transaksi skala besar. Jauh lebih efisien dari Apriori untuk dataset besar.',
+        cara: 'Bangun FP-tree compact → mine patterns langsung dari tree tanpa generate candidates.',
+        saran: 'Default pilihan untuk association rule mining. Pilih support dan confidence threshold yang tepat.',
+        usecase: 'Rekomendasi produk real-time di e-commerce, analisis cross-sell opportunity di retail.'
+      },
+      {
+        name: 'Eclat',
+        def: 'Association mining menggunakan vertical data format (transaction ID lists), sangat efisien untuk data sparse.',
+        data: 'Data transaksi sparse di mana setiap item muncul dalam sedikit transaksi.',
+        cara: 'Represent data sebagai tidsets (transaction IDs per item). Intersection tidsets untuk menemukan frequent pairs.',
+        saran: 'Memory-efficient untuk sparse data. Lebih cepat dari Apriori tapi butuh memory lebih dari FP-Growth.',
+        usecase: 'Analisis pola pembelian produk digital, bundle recommendation untuk software/subscription.'
+      },
+    ]
+  },
+  {
+    id: 'causal',
+    name: 'Causal Inference',
+    icon: '🔬',
+    color: '#fa6dab',
+    group: 'supervised',
+    desc: 'Mengestimasi efek kausal dan hubungan sebab-akibat dari data observasional',
+    algos: [
+      {
+        name: 'Propensity Score Matching',
+        def: 'Mengestimasi efek treatment dengan mencocokkan unit treatment dan control berdasarkan probabilitas treatment.',
+        data: 'Data observasional dengan treatment/control group, banyak confounding variables.',
+        cara: 'Estimasi propensity score P(T=1|X) → match unit similar score → estimate treatment effect.',
+        saran: 'Baik untuk mengurangi selection bias. Butuh overlap yang cukup antara treatment dan control.',
+        usecase: 'Mengestimasi efek iklan terhadap penjualan tanpa A/B test, evaluasi program intervensi kebijakan.'
+      },
+      {
+        name: 'Difference-in-Differences (DiD)',
+        def: 'Estimasi efek kausal dengan membandingkan perubahan outcome antara treatment dan control group seiring waktu.',
+        data: 'Panel data dengan observasi sebelum dan sesudah treatment, parallel trends assumption.',
+        cara: 'DiD = (ȳ_treated_post - ȳ_treated_pre) - (ȳ_control_post - ȳ_control_pre).',
+        saran: 'Cek parallel trends assumption menggunakan periode pre-treatment. Standar di riset ekonometrik.',
+        usecase: 'Evaluasi dampak kebijakan minimum wage, efek program vaksinasi pada populasi.'
+      },
+      {
+        name: 'Causal Forest',
+        def: 'Ekstensi Random Forest untuk estimasi heterogeneous treatment effects pada level individual.',
+        data: 'Data observasional besar dengan treatment heterogen, ingin efek spesifik per subgroup.',
+        cara: 'Random Forest yang dioptimalkan untuk estimasi treatment effect (CATE) bukan prediksi outcome.',
+        saran: 'Gunakan library grf (R) atau EconML (Python). Powerful untuk personalized medicine dan policy.',
+        usecase: 'Estimasi efek obat per pasien (precision medicine), personalized marketing treatment effects.'
+      },
+      {
+        name: 'Double Machine Learning (DML)',
+        def: 'Menggabungkan ML dengan semiparametric inference untuk estimasi kausal yang tidak bias.',
+        data: 'High-dimensional observational data di mana ML diperlukan untuk kontrol confounders.',
+        cara: 'Residualize Y dan T pada X menggunakan ML → regresikan residual Y pada residual T.',
+        saran: 'Metode modern yang menggabungkan ML power dengan statistical inference yang valid.',
+        usecase: 'Efek harga terhadap demand saat banyak confounders, efek edukasi pada wage dengan data kaya.'
+      },
+    ]
+  },
+  {
+    id: 'metric',
+    name: 'Metric Learning & Few-Shot',
+    icon: '📐',
+    color: '#6dfad8',
+    group: 'deep-learning',
+    desc: 'Belajar representasi yang bermakna dari sedikit contoh',
+    algos: [
+      {
+        name: 'Siamese Network',
+        def: 'Dua jaringan dengan bobot yang sama memproses pasangan input untuk belajar similarity function.',
+        data: 'Data berpasangan (similar/dissimilar), sedikit contoh per kelas, one-shot learning tasks.',
+        cara: 'Dua input melalui jaringan identik → embedding → hitung jarak (contrastive/binary cross-entropy loss).',
+        saran: 'Butuh pair generation yang baik. Cocok untuk verification tasks (wajah, tanda tangan).',
+        usecase: 'Face verification (wajah sama orang atau beda?), signature verification, duplicate question detection.'
+      },
+      {
+        name: 'Triplet Network',
+        def: 'Belajar embedding di mana anchor lebih dekat ke positive daripada negative dengan margin tertentu.',
+        data: 'Data yang bisa di-anchor-positive-negative triplet, image retrieval, face recognition.',
+        cara: 'Minimisasi triplet loss: d(a,p) - d(a,n) + margin < 0. Hard negative mining penting.',
+        saran: 'Hard negative mining sangat penting untuk konvergensi. FaceNet menggunakan ini untuk face recognition.',
+        usecase: 'Face recognition (FaceNet), image retrieval, person re-identification di surveillance.'
+      },
+      {
+        name: 'Prototypical Network',
+        def: 'Few-shot learning berbasis jarak ke prototype (centroid) dari support examples tiap kelas.',
+        data: 'Data few-shot (5-shot, 1-shot), kelas baru yang tidak ada saat training.',
+        cara: 'Hitung centroid embedding dari support examples per kelas → classify berdasarkan jarak ke centroid.',
+        saran: 'Sederhana dan efektif untuk few-shot. Jauh lebih mudah dari MAML.',
+        usecase: 'Klasifikasi spesies langka dengan sedikit foto, deteksi penyakit rare dari sedikit sampel.'
+      },
+      {
+        name: 'Contrastive Learning (SimCLR, MoCo)',
+        def: 'Self-supervised learning yang belajar representasi dengan menarik augmented views serupa dan mendorong yang berbeda.',
+        data: 'Data unlabeled dalam jumlah besar. Cocok untuk pre-training sebelum fine-tuning.',
+        cara: 'Buat dua augmentasi dari gambar yang sama sebagai positive pair. Semua gambar lain sebagai negative.',
+        saran: 'Foundation of self-supervised vision. Representasi yang dihasilkan powerful untuk downstream tasks.',
+        usecase: 'Pre-training model vision tanpa label, representasi medis dari data X-ray yang tidak berlabel.'
+      },
+    ]
+  },
+  {
+    id: 'evolutionary',
+    name: 'Evolutionary & Metaheuristic',
+    icon: '🧬',
+    color: '#a8fa6d',
+    group: 'unsupervised',
+    desc: 'Optimasi terinspirasi alam untuk masalah yang tidak bisa didifferensiasi',
+    algos: [
+      {
+        name: 'Genetic Algorithm',
+        def: 'Optimasi berbasis seleksi alam: populasi solusi berevolusi via selection, crossover, dan mutation.',
+        data: 'Masalah optimasi kombinatorial, search space diskrit, tidak ada gradient.',
+        cara: 'Encode solusi sebagai kromosom → selection → crossover → mutation → evaluate fitness → ulangi.',
+        saran: 'Hyperparameter: population size, crossover rate, mutation rate. Konvergensi lambat untuk ruang besar.',
+        usecase: 'Optimasi rute logistik (VRP), desain jaringan saraf (NAS), penjadwalan produksi kompleks.'
+      },
+      {
+        name: 'Particle Swarm Optimization',
+        def: 'Optimasi terinspirasi gerombolan burung: partikel bergerak dalam search space mengikuti best positions.',
+        data: 'Fungsi kontinu di mana gradient tidak tersedia, hyperparameter optimization.',
+        cara: 'Setiap partikel update velocity berdasarkan personal best + global best. Bergerak di continuous space.',
+        saran: 'Lebih sederhana dari Genetic Algorithm. Baik untuk fungsi kontinu.',
+        usecase: 'Kalibrasi parameter model simulasi, optimasi antena, hyperparameter neural network.'
+      },
+      {
+        name: 'Ant Colony Optimization',
+        def: 'Optimasi berbasis perilaku semut mencari makanan: pheromone trail menuntun pencarian solusi optimal.',
+        data: 'Masalah routing dan scheduling: TSP, network routing, job shop scheduling.',
+        cara: 'Semut bangun solusi mengikuti probabilitas berbasis pheromone. Update pheromone berdasarkan kualitas.',
+        saran: 'Sangat baik untuk graph-based optimization. Konvergen lebih lambat dari algoritma lain.',
+        usecase: 'Traveling Salesman Problem, optimasi rute pengiriman last-mile, network packet routing.'
+      },
+      {
+        name: 'Simulated Annealing',
+        def: 'Optimasi yang menghindari local optima dengan menerima solusi lebih buruk secara probabilistik (temperature).',
+        data: 'Masalah optimasi kombinatorial kompleks dengan banyak local optima.',
+        cara: 'Iterasi: random neighbor → jika lebih baik accept, jika lebih buruk accept dengan prob e^(-ΔE/T). T turun.',
+        saran: 'Cooling schedule penting: temperature harus turun lambat untuk hasil baik.',
+        usecase: 'Penjadwalan produksi pabrik, layout chip VLSI, optimasi portfolio investasi.'
+      },
+      {
+        name: 'CMA-ES (Covariance Matrix Adaptation ES)',
+        def: 'Evolutionary strategy paling powerful untuk optimasi numerik kontinu, adaptasi covariance matrix secara otomatis.',
+        data: 'Fungsi kontinu berdimensi rendah-menengah (< 100D), gradient tidak tersedia, non-convex.',
+        cara: 'Sample dari multivariate Gaussian → update mean dan covariance matrix dari successful samples.',
+        saran: 'State-of-the-art untuk black-box optimization. Library: pycma, nevergrad.',
+        usecase: 'Optimasi hyperparameter ML tanpa gradient, kalibrasi model simulasi fisika/engineering.'
+      },
+    ]
+  },
+  {
+    id: 'ranking',
+    name: 'Learning to Rank',
+    icon: '🏆',
+    color: '#e0fa6d',
+    group: 'supervised',
+    desc: 'Meranking dokumen atau item berdasarkan relevansi',
+    algos: [
+      {
+        name: 'RankNet / LambdaRank',
+        def: 'Neural network yang belajar ranking dari pasangan item (yang mana lebih relevan).',
+        data: 'Data query-document dengan relevance judgments, search engine ranking dataset.',
+        cara: 'RankNet: pairwise loss dari probabilitas preferensi. LambdaRank: tambah IR metrics ke gradient.',
+        saran: 'LambdaMART (XGBoost + Lambda) sering menang di praktik untuk information retrieval.',
+        usecase: 'Ranking hasil pencarian search engine, ranking produk di e-commerce, ranking kandidat rekrutmen.'
+      },
+      {
+        name: 'LambdaMART',
+        def: 'Kombinasi MART (Gradient Boosting) dengan LambdaRank gradient, state-of-the-art untuk IR tasks.',
+        data: 'Data query-document dengan relevance labels, LETOR format dataset.',
+        cara: 'Gradient boosting dengan gradient dari LambdaRank yang optimize NDCG secara langsung.',
+        saran: 'Implementasi di LightGBM (lambdarank objective). Sangat kompetitif di benchmark IR.',
+        usecase: 'Core ranking di Bing, Yahoo, Baidu search engine, ranking produk marketplace.'
+      },
+    ]
+  },
+  {
+    id: 'recommender',
+    name: 'Recommendation Systems',
+    icon: '💡',
+    color: '#6df0fa',
+    group: 'unsupervised',
+    desc: 'Sistem yang merekomendasikan item relevan kepada pengguna',
+    algos: [
+      {
+        name: 'Matrix Factorization (SVD/NMF)',
+        def: 'Dekomposisi user-item matrix ke representasi laten pengguna dan item untuk prediksi rating.',
+        data: 'Data rating user-item (sparse matrix), implicit/explicit feedback.',
+        cara: 'R ≈ U × V^T di mana U = user latent factors, V = item latent factors. Minimisasi reconstruction error.',
+        saran: 'ALS (Alternating Least Squares) untuk implicit feedback. SVD untuk explicit rating.',
+        usecase: 'Netflix movie recommendation, Spotify song recommendation, Amazon product recommendation.'
+      },
+      {
+        name: 'Neural Collaborative Filtering (NCF)',
+        def: 'Mengganti dot product matrix factorization dengan neural network untuk menangkap interaksi non-linear.',
+        data: 'Data interaksi user-item (click, purchase, view) dalam jumlah besar.',
+        cara: 'Embedding user dan item → concatenate → MLP untuk prediksi interaksi. Gabungkan GMF dan MLP.',
+        saran: 'Biasanya lebih baik dari MF untuk implicit feedback data besar.',
+        usecase: 'Rekomendasi produk e-commerce, konten article recommendation, app recommendation.'
+      },
+      {
+        name: 'DeepFM',
+        def: 'Gabungkan Factorization Machines dan Deep Neural Network untuk menangkap low dan high order feature interactions.',
+        data: 'Data dengan banyak fitur kategorik sparse, CTR prediction task.',
+        cara: 'FM component + Deep component berbagi embedding. End-to-end training bersama.',
+        saran: 'Pilihan utama untuk CTR (Click-Through Rate) prediction di advertising.',
+        usecase: 'CTR prediction untuk iklan digital, konten ranking di feed sosial media.'
+      },
+      {
+        name: 'Two-Tower Model',
+        def: 'Dua encoder terpisah untuk user dan item yang menghasilkan embedding untuk retrieval cepat.',
+        data: 'Data skala besar (jutaan item), butuh retrieval real-time yang sangat cepat.',
+        cara: 'User tower → user embedding. Item tower → item embedding. ANN (FAISS) untuk fast retrieval.',
+        saran: 'Arsitektur standar industri untuk large-scale recommendation. Pre-compute item embeddings.',
+        usecase: 'YouTube video recommendation, TikTok content retrieval, Pinterest image recommendation.'
+      },
+      {
+        name: 'GRU4Rec (Session-Based)',
+        def: 'Menggunakan GRU untuk memodelkan urutan interaksi dalam sesi tanpa identitas pengguna.',
+        data: 'Data sesi anonim (tanpa login), click stream, sequential item interactions.',
+        cara: 'Encode urutan item dalam sesi dengan GRU → prediksi item berikutnya yang akan diinteraksi.',
+        saran: 'Sangat baik untuk e-commerce guest sessions, anonymous users, cold-start users.',
+        usecase: 'Rekomendasi produk untuk pengunjung baru e-commerce, next-song recommendation Spotify.'
+      },
+    ]
+  },
+  {
+    id: 'survival',
+    name: 'Survival Analysis',
+    icon: '⏱️',
+    color: '#fa6d7c',
+    group: 'supervised',
+    desc: 'Analisis waktu hingga suatu event terjadi, dengan censored data',
+    algos: [
+      {
+        name: 'Cox Proportional Hazard',
+        def: 'Model semi-parametrik untuk time-to-event data yang memodelkan pengaruh kovariat pada hazard rate.',
+        data: 'Time-to-event data dengan censoring, kovariat numerik/kategorik, asumsi proportional hazards.',
+        cara: 'h(t|X) = h₀(t) × exp(βX). Partial likelihood untuk estimate β tanpa perlu specify baseline hazard.',
+        saran: 'Cek proportional hazards assumption (Schoenfeld residuals). Standard dalam clinical research.',
+        usecase: 'Prediksi survival pasien kanker, analisis churn pelanggan dengan waktu hingga churn.'
+      },
+      {
+        name: 'Kaplan-Meier Estimator',
+        def: 'Non-parametrik estimasi kurva survival, standar visualisasi dan perbandingan grup.',
+        data: 'Time-to-event data dengan censoring. Tidak ada kovariat — hanya perbandingan antar grup.',
+        cara: 'S(t) = Π(1 - d_i/n_i) untuk setiap event time. Step function yang turun di setiap event.',
+        saran: 'Gunakan Log-rank test untuk bandingkan kurva antar grup. Selalu visualisasi dulu sebelum Cox.',
+        usecase: 'Perbandingan survival rate dua treatment dalam uji klinis, analisis churn per segmen pelanggan.'
+      },
+      {
+        name: 'DeepHit / DeepSurv',
+        def: 'Model survival berbasis neural network yang bisa menangkap hubungan non-linear tanpa asumsi parametrik.',
+        data: 'Dataset besar dengan banyak kovariat, hubungan non-linear antara fitur dan survival.',
+        cara: 'Neural network predict hazard function atau discrete survival distribution. Loss disesuaikan untuk censoring.',
+        saran: 'Lebih fleksibel dari Cox untuk data besar. Library: lifelines, pycox.',
+        usecase: 'Prediksi readmission pasien rumah sakit dari EHR data, prediksi lifetime value pelanggan.'
+      },
+    ]
+  },
+  {
+    id: 'paradigm',
+    name: 'Learning Paradigms',
+    icon: '🔄',
+    color: '#6db8fa',
+    group: 'supervised',
+    desc: 'Paradigma khusus pembelajaran yang mengatasi keterbatasan data atau distribusi',
+    algos: [
+      {
+        name: 'Transfer Learning',
+        def: 'Menggunakan pengetahuan dari task/domain sumber sebagai titik awal untuk task/domain target.',
+        data: 'Target domain dengan data terbatas. Sumber domain berlimpah dan terkait.',
+        cara: 'Pre-train pada source → fine-tune pada target. Bisa freeze early layers atau update semua.',
+        saran: 'Selalu coba transfer learning sebelum train from scratch. Hemat data, waktu, dan komputasi.',
+        usecase: 'Fine-tune BERT untuk analisis hukum Indonesia, adaptasi CNN medis dari ImageNet.'
+      },
+      {
+        name: 'Federated Learning',
+        def: 'Training terdistribusi di banyak perangkat tanpa data meninggalkan perangkat, menjaga privasi.',
+        data: 'Data sensitif yang tidak boleh dikumpulkan terpusat: data medis, financial, personal device.',
+        cara: 'Setiap klien train lokal → kirim gradients/weights → server aggregate (FedAvg) → update global model.',
+        saran: 'Communication cost tinggi. Non-IID data jadi tantangan utama. Gunakan differential privacy untuk keamanan lebih.',
+        usecase: 'Keyboard predictive text dari jutaan HP tanpa kirim ketikan, deteksi fraud dari data bank tersebar.'
+      },
+      {
+        name: 'Active Learning',
+        def: 'Model secara cerdas memilih sampel yang paling informatif untuk dilabeli, meminimalkan labeling cost.',
+        data: 'Data berlabel sedikit, data tidak berlabel banyak, labeling mahal (butuh expert).',
+        cara: 'Query strategy: uncertainty sampling, query by committee, expected model change → label → retrain.',
+        saran: 'Bisa kurangi kebutuhan label hingga 90%. Pilih query strategy sesuai model dan budget.',
+        usecase: 'Anotasi data medis oleh dokter (labeli hanya kasus yang model paling tidak yakin).'
+      },
+      {
+        name: 'Semi-Supervised Learning',
+        def: 'Memanfaatkan data tidak berlabel yang berlimpah bersama sedikit data berlabel untuk meningkatkan performa.',
+        data: 'Sedikit labeled data + banyak unlabeled data dari distribusi yang sama.',
+        cara: 'Self-training, label propagation, consistency regularization (FixMatch, MixMatch).',
+        saran: 'FixMatch / FlexMatch state-of-the-art untuk image classification semi-supervised.',
+        usecase: 'Klasifikasi citra medis dengan hanya 100 label dari 100K gambar, NLP dengan sedikit annotasi.'
+      },
+      {
+        name: 'Meta-Learning (MAML)',
+        def: '"Belajar cara belajar" — menemukan inisialisasi model yang bisa adapt ke task baru dengan sedikit update.',
+        data: 'Banyak task berbeda tapi terkait, butuh generalisasi ke task baru dengan data sangat sedikit.',
+        cara: 'Bi-level optimization: inner loop adapt ke task → outer loop update inisialisasi untuk fast adaptation.',
+        saran: 'Computationally expensive. Reptile adalah approx yang lebih efisien.',
+        usecase: 'Robot yang bisa adapt ke lingkungan baru dengan beberapa demonstrasi, drug response prediction.'
+      },
+      {
+        name: 'Multi-Task Learning',
+        def: 'Satu model belajar banyak tasks sekaligus, berbagi representasi untuk saling memperkuat.',
+        data: 'Banyak related tasks dengan data masing-masing. Representasi dasar bisa di-share.',
+        cara: 'Shared backbone → task-specific heads. Gradient dari semua tasks update shared layers.',
+        saran: 'Pemilihan tasks yang related penting. Perhatikan task weighting agar tidak satu task dominan.',
+        usecase: 'Model NLP unified (NER + sentiment + summarization), self-driving (detection + depth + segmentation).'
+      },
+      {
+        name: 'Online Learning',
+        def: 'Model update secara inkremental dari setiap data point baru, tanpa retrain ulang dari awal.',
+        data: 'Data stream real-time yang terus mengalir, konsep drift mungkin terjadi, storage terbatas.',
+        cara: 'Update parameter langsung dari setiap (mini) batch: SGD, Perceptron, Passive-Aggressive.',
+        saran: 'Gunakan adaptive learning rates. Deteksi concept drift secara aktif (ADWIN, DDM).',
+        usecase: 'Update rekomendasi real-time saat user click, adaptive spam filter yang update tiap email.'
+      },
+    ]
+  },
+];
+
+function renderAll() {
+  const main = document.getElementById('mainContent');
+  categories.forEach(cat => {
+    const section = document.createElement('section');
+    section.className = 'category';
+    section.id = 'cat-' + cat.id;
+    section.dataset.group = cat.group;
+
+    section.innerHTML = `
+      <div class="cat-header">
+        <div class="cat-icon" style="background:${cat.color}22; color:${cat.color}">${cat.icon}</div>
+        <div class="cat-title-wrap">
+          <div class="cat-name" style="color:${cat.color}">${cat.name}</div>
+          <div class="cat-desc">${cat.desc}</div>
+        </div>
+        <div class="cat-count">${cat.algos.length} algoritma</div>
+      </div>
+      <div class="algo-grid" id="grid-${cat.id}"></div>
+    `;
+    main.appendChild(section);
+
+    const grid = document.getElementById('grid-' + cat.id);
+    cat.algos.forEach(algo => {
+      const card = document.createElement('div');
+      card.className = 'algo-card';
+      card.dataset.name = algo.name.toLowerCase();
+      card.dataset.cat = cat.id;
+      card.dataset.group = cat.group;
+      card.style.setProperty('--cat-color', cat.color);
+
+      card.innerHTML = `
+        <div class="card-accent"></div>
+        <div class="card-body">
+          <div class="algo-name">${algo.name}</div>
+          <div class="algo-def">${algo.def}</div>
+          <div class="expand-btn">
+            <div class="expand-icon">+</div>
+            <span>Detail lengkap</span>
+          </div>
+          <div class="card-details">
+            <div class="detail-row">
+              <div class="detail-label">📦 Cocok untuk data</div>
+              <div class="detail-val">${algo.data}</div>
+            </div>
+            <div class="detail-row">
+              <div class="detail-label">⚙️ Cara kerja</div>
+              <div class="detail-val">${algo.cara}</div>
+            </div>
+            <div class="detail-row">
+              <div class="detail-label">💡 Saran pemilihan</div>
+              <div class="detail-val">${algo.saran}</div>
+            </div>
+            <div class="detail-row">
+              <div class="detail-label">🚀 Use case nyata</div>
+              <div class="detail-val">${algo.usecase}</div>
+            </div>
+          </div>
+        </div>
+      `;
+
+      card.addEventListener('click', () => {
+        card.classList.toggle('expanded');
+      });
+
+      grid.appendChild(card);
+    });
+  });
+}
+
+function setupSearch() {
+  const input = document.getElementById('searchInput');
+  input.addEventListener('input', () => {
+    const q = input.value.toLowerCase().trim();
+    const cards = document.querySelectorAll('.algo-card');
+    const cats = document.querySelectorAll('.category');
+    let hasResult = false;
+
+    cards.forEach(card => {
+      const name = card.dataset.name || '';
+      const body = card.innerText.toLowerCase();
+      const match = !q || name.includes(q) || body.includes(q);
+      card.classList.toggle('hidden', !match);
+      if (match) hasResult = true;
+    });
+
+    cats.forEach(cat => {
+      const visibles = cat.querySelectorAll('.algo-card:not(.hidden)');
+      cat.classList.toggle('cat-hidden', visibles.length === 0 && q !== '');
+    });
+
+    document.getElementById('noResults').style.display = (!hasResult && q) ? 'block' : 'none';
+  });
+}
+
+function setupFilters() {
+  const btns = document.querySelectorAll('.filter-btn');
+  btns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      btns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const f = btn.dataset.filter;
+
+      const cats = document.querySelectorAll('.category');
+      cats.forEach(cat => {
+        if (f === 'all') {
+          cat.classList.remove('cat-hidden');
+        } else {
+          cat.classList.toggle('cat-hidden', cat.dataset.group !== f);
+        }
+      });
+
+      document.getElementById('searchInput').value = '';
+      document.querySelectorAll('.algo-card').forEach(c => c.classList.remove('hidden'));
+    });
+  });
+}
+
+renderAll();
+setupSearch();
+setupFilters();
+</script>
+</body>
+</html>
